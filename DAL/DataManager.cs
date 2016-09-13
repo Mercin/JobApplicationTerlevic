@@ -8,6 +8,7 @@ using System.Net.Http;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using System.IO;
 
 namespace DAL
 {
@@ -151,6 +152,17 @@ namespace DAL
 
 
                         //}
+
+                        try
+                        {
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            string content = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        }
+                        catch(WebException e)
+                        {
+                            Console.Out.WriteLine("No data was found for the specified parameters");
+                        }
 
                     }
                     tr.Commit();
