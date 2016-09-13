@@ -17,9 +17,7 @@ namespace JobApplicationTerlevic
 
             //Validation of origin airport IATA
 
-            if(originAirport != "" && originAirport != null)
-            {
-                if(originAirport.Length != 3)
+            if(originAirport.Length != 3)
                 {
                     MessageBox.Show("IATA code for origin needs to have 3 letters", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
@@ -29,12 +27,10 @@ namespace JobApplicationTerlevic
                     MessageBox.Show("IATA code for origin needs to contain only errors", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-            }
+            
 
             //Validation of destination airport IATA
 
-            if (destAirport != "" && destAirport != null)
-            {
                 if (destAirport.Length != 3)
                 {
                     MessageBox.Show("IATA code for destination needs to have 3 letters", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -45,7 +41,7 @@ namespace JobApplicationTerlevic
                     MessageBox.Show("IATA code for destination needs to contain only letters", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-            }
+            
 
             //Validation if return is before departure
 
