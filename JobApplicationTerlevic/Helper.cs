@@ -43,6 +43,11 @@ namespace JobApplicationTerlevic
                 }
             
 
+            if(departureDate.CompareTo(DateTime.Today) <= 0)
+            {
+                MessageBox.Show("Departure date cannot be in the past", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
             //Validation if return is before departure
 
             if(returnDate.Date.CompareTo(departureDate.Date) < 0)

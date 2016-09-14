@@ -36,6 +36,8 @@ namespace DAL
                 String queryResultsCmd = "CREATE TABLE QueryResults (id INTEGER PRIMARY KEY AUTOINCREMENT, GeneratedByQuery INTEGER, DepartingAirport VARCHAR(3),  DestinationAirport VARCHAR(3), DepartureDate TEXT, ReturnDate TEXT, InBoundFlights INTEGER, OutboundFlights INTEGER, Passengers INTEGER, Currency VARCHAR(3), TotalPrice REAL , FOREIGN KEY (GeneratedByQuery) REFERENCES QueryCollection(id))";
                 SQLiteCommand createQueryResults = new SQLiteCommand(queryResultsCmd, cManager.dbConnection);
                 createQueryResults.ExecuteNonQuery();
+
+
             }
 
         }
@@ -86,7 +88,7 @@ namespace DAL
             {
                 //The query has been processed already, fetch old data
                 SQLiteCommand cmd = new SQLiteCommand(fetchID.ToString(), cManager.dbConnection);
-                command.CommandType = System.Data.CommandType.Text;
+                cmd.CommandType = System.Data.CommandType.Text;
 
                 int queryID = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -98,6 +100,7 @@ namespace DAL
             }
             else
             {
+                SQLiteDataReader sqlReader = null;
                 //New query, fetch new data
 
                 using(SQLiteTransaction tr = cManager.dbConnection.BeginTransaction())
@@ -143,25 +146,35 @@ namespace DAL
                         APIquery.Append("&currency=" + currency);
                         APIquery.Append("&apikey=" + APIKey);
 
-                        //using (var client = new HttpClient())
-                        //{
-                        //    var responseString =  client.GetStringAsync(APIquery.ToString());
-                        //    //var responseString = client.GetStringAsync("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
-                        //    responseString.Wait();
-                        //    JObject json = JObject.Parse(responseString);
 
-
-                        //}
 
                         try
                         {
+                            
                             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
+                            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
+                            request.ContentType = "application/json; charset=utf-8";
                             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                             string content = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+                            JToken token = JObject.Parse(content);
+                            String currencyFromJson = (String)token.SelectToken("currency");
+
+
                         }
-                        catch(WebException e)
+                        catch (Exception e)
                         {
+                            //No data was found
                             Console.Out.WriteLine("No data was found for the specified parameters");
+
+                            //Update the query to look at the error row
+                            int errQuery = Convert.ToInt32(cmd.ExecuteScalar());
+
+                            StringBuilder stb = new StringBuilder();
+                            stb.Append("INSERT INTO QueryResults (GeneratedByQuery, DepartingAirport,  DestinationAirport, DepartureDate, ReturnDate, InBoundFlights, OutboundFlights, Passengers, Currency, TotalPrice) VALUES(" + errQuery + ", null, null, null, null, null, null, null, null, null");
+                            SQLiteCommand comErr = new SQLiteCommand(stb.ToString(), cManager.dbConnection);
+                            comErr.ExecuteNonQuery();
+
                         }
 
                     }
