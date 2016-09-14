@@ -9,6 +9,7 @@ using Newtonsoft;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace DAL
 {
@@ -92,8 +93,21 @@ namespace DAL
 
                 int queryID = Convert.ToInt32(cmd.ExecuteScalar());
 
+                StringBuilder checkIfDataExists = new StringBuilder();
+                checkIfDataExists.Append("SELECT count(*) FROM QueryResults WHERE GeneratedByQuery = " + queryID);
+
+
+                SQLiteCommand cmd3 = new SQLiteCommand(checkIfDataExists.ToString(), cManager.dbConnection);
+
+     
+                if(Convert.ToInt32(cmd3.ExecuteScalar()) == 0)
+                {
+                    return null;
+                }
+
                 StringBuilder returnQuery = new StringBuilder();
                 returnQuery.Append("SELECT * FROM QueryResults WHERE GeneratedByQuery = " + queryID);
+
                 SQLiteCommand cmd2 = new SQLiteCommand(returnQuery.ToString(), cManager.dbConnection);
 
                 return cmd2.ExecuteReader();
@@ -146,19 +160,18 @@ namespace DAL
                         APIquery.Append("&currency=" + currency);
                         APIquery.Append("&apikey=" + APIKey);
 
-
-
                         try
                         {
                             
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
-                            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
+                            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
                             request.ContentType = "application/json; charset=utf-8";
                             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                             string content = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-                            JToken token = JObject.Parse(content);
-                            String currencyFromJson = (String)token.SelectToken("currency");
+                            //JObject jsonObj = JObject.Parse(content);
+                            RootObject jsonObj = JsonConvert.DeserializeObject<RootObject>(content);
+                            InsertResultIntoDB(jsonObj);
 
 
                         }
@@ -166,14 +179,7 @@ namespace DAL
                         {
                             //No data was found
                             Console.Out.WriteLine("No data was found for the specified parameters");
-
-                            //Update the query to look at the error row
-                            int errQuery = Convert.ToInt32(cmd.ExecuteScalar());
-
-                            StringBuilder stb = new StringBuilder();
-                            stb.Append("INSERT INTO QueryResults (GeneratedByQuery, DepartingAirport,  DestinationAirport, DepartureDate, ReturnDate, InBoundFlights, OutboundFlights, Passengers, Currency, TotalPrice) VALUES(" + errQuery + ", null, null, null, null, null, null, null, null, null");
-                            SQLiteCommand comErr = new SQLiteCommand(stb.ToString(), cManager.dbConnection);
-                            comErr.ExecuteNonQuery();
+                            sqlReader = null;
 
                         }
 
@@ -181,16 +187,14 @@ namespace DAL
                     tr.Commit();
                 }
 
-                return null; 
+                return sqlReader; 
             }
 
         }
 
-        public void FetchDataWithNoPreviousQuery(String originAirport, String destAirport,
-                                   DateTime departureDate, DateTime returnDate,
-                                   String noOfPassengers, String currency)
+        public void InsertResultIntoDB(RootObject token)
         {
-
+            Console.Out.WriteLine(token.currency);
         }
 
     }

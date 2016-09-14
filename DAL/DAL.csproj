@@ -71,6 +71,7 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="FlightInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RootObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
