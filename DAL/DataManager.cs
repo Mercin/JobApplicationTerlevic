@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
+using System.Globalization;
+using System.Threading;
 
 namespace DAL
 {
@@ -47,10 +49,22 @@ namespace DAL
                                    DateTime departureDate, DateTime returnDate,
                                    String noOfPassengers, String currency)
         {
+
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+
             ConnectionManager cManager = ConnectionManager.getInstance();
 
             StringBuilder fetchCount = new StringBuilder();
             StringBuilder fetchID = new StringBuilder();
+
+            FlightInformation flightInformation = new FlightInformation();
+            flightInformation.Origin = originAirport;
+            flightInformation.Destination = destAirport;
+            flightInformation.DepartureDate = departureDate;
+            flightInformation.ArrivalDate = returnDate;
+            flightInformation.NumberOfPassengers = noOfPassengers;
+            flightInformation.Currency = currency;
 
 
             fetchCount.Append("SELECT count(*) FROM QueryCollection WHERE ");
@@ -171,9 +185,14 @@ namespace DAL
 
                             //JObject jsonObj = JObject.Parse(content);
                             RootObject jsonObj = JsonConvert.DeserializeObject<RootObject>(content);
-                            InsertResultIntoDB(jsonObj);
+                            InsertResultIntoDB(jsonObj, queryID, flightInformation, cManager);
 
+                            StringBuilder returnQuery = new StringBuilder();
+                            returnQuery.Append("SELECT * FROM QueryResults WHERE GeneratedByQuery = " + queryID);
 
+                            SQLiteCommand cmd2 = new SQLiteCommand(returnQuery.ToString(), cManager.dbConnection);
+
+                            return cmd2.ExecuteReader();
                         }
                         catch (Exception e)
                         {
@@ -192,9 +211,51 @@ namespace DAL
 
         }
 
-        public void InsertResultIntoDB(RootObject token)
+        public void InsertResultIntoDB(RootObject token, int queryID, FlightInformation flightInformation, ConnectionManager cManager)
         {
-            Console.Out.WriteLine(token.currency);
+            //Console.Out.WriteLine(token.currency);
+
+            int inbountCount = 0;
+            int outboundCount = 0;
+            decimal fare;
+
+            if(flightInformation.NumberOfPassengers == "")
+            {
+                flightInformation.NumberOfPassengers = "null";
+            }
+
+
+            StringBuilder defaultStart = new StringBuilder();
+            defaultStart.Append("INSERT INTO QueryResults (GeneratedByQuery , DepartingAirport,  DestinationAirport, DepartureDate , ReturnDate , InBoundFlights , OutboundFlights , Passengers, Currency, TotalPrice) VALUES (" + queryID + ", '");
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach(var result in token.results)
+            {
+                fare = Convert.ToDecimal(result.fare.total_price);
+                foreach(var itinerary in result.itineraries)
+                {
+                    try
+                    {
+                        inbountCount = itinerary.inbound.flights.Count;
+                    }
+                    catch(Exception e)
+                    {
+                        inbountCount = 0;
+                    }
+                    outboundCount = itinerary.outbound.flights.Count;
+
+                    sb.Append(defaultStart.ToString());
+                    sb.Append(flightInformation.Origin + "', '" + flightInformation.Destination + "', '" + flightInformation.DepartureDate.Year + "-" + flightInformation.DepartureDate.Month + "-" + flightInformation.DepartureDate.Day + "', '" + flightInformation.ArrivalDate.Year + "-" + flightInformation.ArrivalDate.Month + "-" + flightInformation.ArrivalDate.Day + "', " + inbountCount + ", " + outboundCount + ", " +flightInformation.NumberOfPassengers + ", '" + flightInformation.Currency + "', " + fare + ")" );
+
+                    SQLiteCommand cmd = new SQLiteCommand(sb.ToString(), cManager.dbConnection);
+                    cmd.ExecuteNonQuery();
+
+                    sb.Clear();
+
+                }
+            }
+
         }
 
     }

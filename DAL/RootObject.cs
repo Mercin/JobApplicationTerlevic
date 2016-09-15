@@ -43,10 +43,41 @@ namespace DAL
         public List<Flight> flights { get; set; }
     }
 
+    public class Origin2
+    {
+        public string airport { get; set; }
+        public string terminal { get; set; }
+    }
+
+    public class Destination2
+    {
+        public string airport { get; set; }
+        public string terminal { get; set; }
+    }
+
+    public class BookingInfo2
+    {
+        public string travel_class { get; set; }
+        public string booking_code { get; set; }
+        public int seats_remaining { get; set; }
+    }
+
+    public class Flight2
+    {
+        public string departs_at { get; set; }
+        public string arrives_at { get; set; }
+        public Origin2 origin { get; set; }
+        public Destination2 destination { get; set; }
+        public string marketing_airline { get; set; }
+        public string operating_airline { get; set; }
+        public string flight_number { get; set; }
+        public string aircraft { get; set; }
+        public BookingInfo2 booking_info { get; set; }
+    }
 
     public class Inbound
     {
-        public List<Flight> flights { get; set; }
+        public List<Flight2> flights { get; set; }
     }
 
     public class Itinerary
@@ -56,18 +87,6 @@ namespace DAL
     }
 
     public class PricePerAdult
-    {
-        public string total_fare { get; set; }
-        public string tax { get; set; }
-    }
-
-    public class PricePerChild
-    {
-        public string total_fare { get; set; }
-        public string tax { get; set; }
-    }
-
-    public class PricePerInfant
     {
         public string total_fare { get; set; }
         public string tax { get; set; }
@@ -83,8 +102,6 @@ namespace DAL
     {
         public string total_price { get; set; }
         public PricePerAdult price_per_adult { get; set; }
-        public PricePerChild price_per_child { get; set; }
-        public PricePerInfant price_per_infant { get; set; }
         public Restrictions restrictions { get; set; }
     }
 

@@ -43,6 +43,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.GeneratedByQuery = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DepartingAirport = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DestinationAirport = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DepartureDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArrivalDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InBoundFlights = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OutboundFlights = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Passengers = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Currency = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -182,11 +192,85 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.GeneratedByQuery,
+            this.DepartingAirport,
+            this.DestinationAirport,
+            this.DepartureDate,
+            this.ArrivalDate,
+            this.InBoundFlights,
+            this.OutboundFlights,
+            this.Passengers,
+            this.Currency,
+            this.TotalPrice});
             this.dataGridView.Location = new System.Drawing.Point(13, 144);
             this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
             this.dataGridView.Size = new System.Drawing.Size(852, 333);
             this.dataGridView.TabIndex = 1;
+            // 
+            // GeneratedByQuery
+            // 
+            this.GeneratedByQuery.HeaderText = "GeneratedByQuery";
+            this.GeneratedByQuery.Name = "GeneratedByQuery";
+            this.GeneratedByQuery.ReadOnly = true;
+            // 
+            // DepartingAirport
+            // 
+            this.DepartingAirport.HeaderText = "Departing Airport";
+            this.DepartingAirport.Name = "DepartingAirport";
+            this.DepartingAirport.ReadOnly = true;
+            // 
+            // DestinationAirport
+            // 
+            this.DestinationAirport.HeaderText = "Destination Airport";
+            this.DestinationAirport.Name = "DestinationAirport";
+            this.DestinationAirport.ReadOnly = true;
+            // 
+            // DepartureDate
+            // 
+            this.DepartureDate.HeaderText = "Departure";
+            this.DepartureDate.Name = "DepartureDate";
+            this.DepartureDate.ReadOnly = true;
+            // 
+            // ArrivalDate
+            // 
+            this.ArrivalDate.HeaderText = "Return";
+            this.ArrivalDate.Name = "ArrivalDate";
+            this.ArrivalDate.ReadOnly = true;
+            // 
+            // InBoundFlights
+            // 
+            this.InBoundFlights.HeaderText = "Inbound flights";
+            this.InBoundFlights.Name = "InBoundFlights";
+            this.InBoundFlights.ReadOnly = true;
+            // 
+            // OutboundFlights
+            // 
+            this.OutboundFlights.HeaderText = "Outbound flights";
+            this.OutboundFlights.Name = "OutboundFlights";
+            this.OutboundFlights.ReadOnly = true;
+            // 
+            // Passengers
+            // 
+            this.Passengers.HeaderText = "Passengers";
+            this.Passengers.Name = "Passengers";
+            this.Passengers.ReadOnly = true;
+            // 
+            // Currency
+            // 
+            this.Currency.HeaderText = "Currency";
+            this.Currency.Name = "Currency";
+            this.Currency.ReadOnly = true;
+            // 
+            // TotalPrice
+            // 
+            this.TotalPrice.HeaderText = "Total Price";
+            this.TotalPrice.Name = "TotalPrice";
+            this.TotalPrice.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -221,6 +305,16 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GeneratedByQuery;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DepartingAirport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DestinationAirport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DepartureDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArrivalDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InBoundFlights;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OutboundFlights;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Passengers;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Currency;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalPrice;
     }
 }
 

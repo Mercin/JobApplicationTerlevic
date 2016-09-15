@@ -8,17 +8,15 @@ namespace DAL
 {
     public class FlightInformation
     {
-        private String Origin { get; set; }
-        private String Destination { get; set; }
-        private String DepartureDate { get; set; }
-        private String ArrivalDate { get; set; }
-        private int NumberOfItinerariesInbound { get; set; }
-        private int NumberOfItinerariesOutbound { get; set; }
-        private int NumberOfPassengers { get; set; }
-        private String Currency { get; set; }
-        private double TotalPrice { get; set; }
-
-
+        public String Origin { get; set; }
+        public String Destination { get; set; }
+        public DateTime DepartureDate { get; set; }
+        public DateTime ArrivalDate { get; set; }
+        public int NumberOfItinerariesInbound { get; set; }
+        public int NumberOfItinerariesOutbound { get; set; }
+        public String NumberOfPassengers { get; set; }
+        public String Currency { get; set; }
+        public double TotalPrice { get; set; }
 
     }
 }
