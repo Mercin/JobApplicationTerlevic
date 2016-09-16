@@ -177,8 +177,8 @@ namespace DAL
                         try
                         {
                             
-                            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(APIquery.ToString());
+                            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=r51uf0pH7QBSEgzrvrGcsQCZipRnetWn&origin=BOS&destination=LON&departure_date=2016-11-25");
                             request.ContentType = "application/json; charset=utf-8";
                             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                             string content = new StreamReader(response.GetResponseStream()).ReadToEnd();
